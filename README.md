@@ -8,7 +8,7 @@
 
 未来のゴールを終端条件として置き、価値関数と制御方策を時刻 `T → 0` に逆算する教育用Webアプリです。逆算した方策を使って、初期状態から `0 → T` に状態を進められます。画面の地点をクリックすると、その一手の候補操作、環境の流れ、合成した状態変化、現在と未来のコストを比較できます。
 
-定理8で扱われる HJB（Hamilton–Jacobi–Bellman）方程式と動的計画法の関係を、数式・図・操作を通じて学ぶ実験室です。LYAPUNOV LAB、EVOLUTION LAB と共通のヘッダー・フッターを備えています。画面の説明と操作は日本語です。
+定理8で扱われる HJB（Hamilton–Jacobi–Bellman）方程式と動的計画法の関係を、数式・図・操作を通じて学ぶ実験室です。LYAPUNOV LAB、EVOLUTION LAB、INVERSE LIMIT LAB と共通のヘッダー・フッターを備えています。画面の説明と操作は日本語です。
 
 ## 目次
 
@@ -100,13 +100,13 @@ GitHub Pagesで、`main` ブランチのルートにある `index.html`・JavaSc
 
 ## Cognitive Dynamics Series
 
-| Lab | テーマ |
-| --- | --- |
-| [LYAPUNOV LAB](https://inthecradle.github.io/lyapunov-lab/) · THEOREM 01 | リアプノフ関数と状態の時間変化 |
-| [HJB LAB](https://inthecradle.github.io/hjb-lab/) · THEOREM 08 | 終端条件からの価値関数・方策の逆算と前向き実行 |
-| [EVOLUTION LAB](https://inthecradle.github.io/evolution-lab/) · THEOREM 12 | 適応度、勾配流、低抽象近似 |
-| INVERSE LIMIT LAB · THEOREM 16（第4弾） | 逆極限と固定点 |
+公開済みの4作品を、テーマに合わせて試せます。各Labのフッターから他の作品へ移動でき、現在のLabは選択状態で表示します。
 
-ポート5175でのローカル起動時、フッターからLYAPUNOV LABの5173、EVOLUTION LABの5174へリンクします。それぞれの開発サーバーを起動して使用してください。GitHub Pagesでは両Labの公開サイトへリンクします。
+| 公開順 | Lab | 定理 | テーマ |
+| --- | --- | --- | --- |
+| 第1弾 | [LYAPUNOV LAB](https://inthecradle.github.io/lyapunov-lab/) | 01 | 収束と安定性 |
+| 第2弾 | [EVOLUTION LAB](https://inthecradle.github.io/evolution-lab/) | 12 | 適応度と進化勾配 |
+| 第3弾 | [HJB LAB](https://inthecradle.github.io/hjb-lab/) | 08 | 価値地形と最適制御 |
+| 第4弾 | [INVERSE LIMIT LAB](https://inthecradle.github.io/inverse-limit-lab/) | 16 | 抽象階層の整合と固定点 |
 
 制作：[CognitiveMind](https://note.com/dawn_of_coaching)

@@ -2,7 +2,6 @@
   'use strict';
 
   // Local development uses the same ports as the other Labs.
-  // After publication, set the inverse card's data-public-url in index.html.
   const local = ['localhost', '127.0.0.1', '[::1]'].includes(location.hostname);
   const ports = { lyapunov: 5173, evolution: 5174, inverse: 5176 };
   document.querySelectorAll('[data-lab]').forEach(card => {

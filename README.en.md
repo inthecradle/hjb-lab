@@ -8,7 +8,7 @@
 
 An educational web app for setting a future goal as a terminal condition, then computing a value function and control policy backward in time from `T → 0`. You can use that policy to simulate the state forward from `0 → T`. Select a point on the map to compare candidate controls, environmental drift, the resulting motion, and present and future costs.
 
-HJB LAB explores the relationship between the Hamilton–Jacobi–Bellman equation and dynamic programming discussed in Theorem 8. It shares its header and footer with LYAPUNOV LAB and EVOLUTION LAB. The app's interface and explanations are in Japanese.
+HJB LAB explores the relationship between the Hamilton–Jacobi–Bellman equation and dynamic programming discussed in Theorem 8. It shares its header and footer with LYAPUNOV LAB, EVOLUTION LAB, and INVERSE LIMIT LAB. The app's interface and explanations are in Japanese.
 
 ## Contents
 
@@ -102,13 +102,13 @@ In the publishing repository, set **Settings → Pages → Source** to **Deploy 
 
 ## Cognitive Dynamics Series
 
-| Lab | Topic |
-| --- | --- |
-| [LYAPUNOV LAB](https://inthecradle.github.io/lyapunov-lab/) · THEOREM 01 | Lyapunov functions and state evolution |
-| [HJB LAB](https://inthecradle.github.io/hjb-lab/) · THEOREM 08 | Backward computation of values and policies, followed by forward simulation |
-| [EVOLUTION LAB](https://inthecradle.github.io/evolution-lab/) · THEOREM 12 | Fitness, gradient flow, and low-abstraction approximation |
-| INVERSE LIMIT LAB · THEOREM 16 (fourth installment) | Consistency across levels and fixed points |
+All four installments are published. Explore them by topic, or use each Lab's footer to move between apps. The current Lab is highlighted.
 
-When served locally on port 5175, footer links point to LYAPUNOV LAB on port 5173 and EVOLUTION LAB on port 5174; run their development servers to use those links. On GitHub Pages, the links point to the published sites for both Labs.
+| Release | Lab | Theorem | Topic |
+| --- | --- | --- | --- |
+| 1 | [LYAPUNOV LAB](https://inthecradle.github.io/lyapunov-lab/) | 01 | Convergence and stability |
+| 2 | [EVOLUTION LAB](https://inthecradle.github.io/evolution-lab/) | 12 | Fitness and evolutionary gradients |
+| 3 | [HJB LAB](https://inthecradle.github.io/hjb-lab/) | 08 | Value landscapes and optimal control |
+| 4 | [INVERSE LIMIT LAB](https://inthecradle.github.io/inverse-limit-lab/) | 16 | Consistency across abstraction levels and fixed points |
 
 Created by [CognitiveMind](https://note.com/dawn_of_coaching).
