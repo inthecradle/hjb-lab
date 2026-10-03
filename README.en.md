@@ -4,6 +4,8 @@
 
 [日本語](README.md) | English
 
+[**Open the app**](https://inthecradle.github.io/hjb-lab/) · [GitHub repository](https://github.com/inthecradle/hjb-lab)
+
 An educational web app for setting a future goal as a terminal condition, then computing a value function and control policy backward in time from `T → 0`. You can use that policy to simulate the state forward from `0 → T`. Select a point on the map to compare candidate controls, environmental drift, the resulting motion, and present and future costs.
 
 HJB LAB explores the relationship between the Hamilton–Jacobi–Bellman equation and dynamic programming discussed in Theorem 8. It shares its header and footer with LYAPUNOV LAB and EVOLUTION LAB. The app's interface and explanations are in Japanese.
@@ -14,6 +16,7 @@ HJB LAB explores the relationship between the Hamilton–Jacobi–Bellman equati
 - [Using the simulator](#using-the-simulator)
 - [Mathematical model and its scope](#mathematical-model-and-its-scope)
 - [Verification](#verification)
+- [Published site and updates](#published-site-and-updates)
 - [Files](#files)
 - [Cognitive Dynamics Series](#cognitive-dynamics-series)
 
@@ -73,6 +76,16 @@ The checks cover five scenarios: default settings, a short horizon, a moved goal
 
 For a browser check, select “最後の一手を考える” → “現在まで計算”. The app switches to “現在から実行” automatically; press “方策を実行” to start playback. A short horizon can leave a nonzero distance to the target, illustrating that arrival is not guaranteed.
 
+## Published site and updates
+
+Live site: [HJB LAB](https://inthecradle.github.io/hjb-lab/)
+
+Repository: [inthecradle/hjb-lab](https://github.com/inthecradle/hjb-lab)
+
+GitHub Pages serves `index.html`, JavaScript, and CSS from the root of the `main` branch. No build step is required; pushing to `main` automatically updates the published site.
+
+In the publishing repository, set **Settings → Pages → Source** to **Deploy from a branch**, with branch `main` and folder `/(root)`. Before pushing updates, run the checks described above: `node tests/solver-check.js` and `node tests/surface3d-check.js`.
+
 ## Files
 
 | File | Purpose |
@@ -92,12 +105,10 @@ For a browser check, select “最後の一手を考える” → “現在ま�
 | Lab | Topic |
 | --- | --- |
 | [LYAPUNOV LAB](https://inthecradle.github.io/lyapunov-lab/) · THEOREM 01 | Lyapunov functions and state evolution |
-| HJB LAB · THEOREM 08 | Backward computation of values and policies, followed by forward simulation |
+| [HJB LAB](https://inthecradle.github.io/hjb-lab/) · THEOREM 08 | Backward computation of values and policies, followed by forward simulation |
 | [EVOLUTION LAB](https://inthecradle.github.io/evolution-lab/) · THEOREM 12 | Fitness, gradient flow, and low-abstraction approximation |
 | INVERSE LIMIT LAB · THEOREM 16 (fourth installment) | Consistency across levels and fixed points |
 
-On mobile, playback controls and the timeline appear directly after the map. When served locally on port 5175, footer links point to LYAPUNOV LAB on port 5173, EVOLUTION LAB on port 5174, and INVERSE LIMIT LAB on port 5176; run their development servers to use those links. Other hosts use the published LYAPUNOV LAB and EVOLUTION LAB sites.
-
-To enable the public INVERSE LIMIT LAB link, set `data-public-url` on the `data-lab="inverse"` card in `index.html`; without a URL, the card is marked as awaiting publication. Keep `series-chrome.css` identical across all four Labs. The three React apps also share identical copies of `SeriesChrome.tsx` and configure the public INVERSE LIMIT LAB link through the build-time variable `VITE_INVERSE_LIMIT_LAB_URL`.
+When served locally on port 5175, footer links point to LYAPUNOV LAB on port 5173 and EVOLUTION LAB on port 5174; run their development servers to use those links. On GitHub Pages, the links point to the published sites for both Labs.
 
 Created by [CognitiveMind](https://note.com/dawn_of_coaching).

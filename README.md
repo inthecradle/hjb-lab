@@ -4,6 +4,8 @@
 
 日本語 | [English](README.en.md)
 
+[**ブラウザで試す**](https://inthecradle.github.io/hjb-lab/) · [GitHubリポジトリ](https://github.com/inthecradle/hjb-lab)
+
 未来のゴールを終端条件として置き、価値関数と制御方策を時刻 `T → 0` に逆算する教育用Webアプリです。逆算した方策を使って、初期状態から `0 → T` に状態を進められます。画面の地点をクリックすると、その一手の候補操作、環境の流れ、合成した状態変化、現在と未来のコストを比較できます。
 
 定理8で扱われる HJB（Hamilton–Jacobi–Bellman）方程式と動的計画法の関係を、数式・図・操作を通じて学ぶ実験室です。LYAPUNOV LAB、EVOLUTION LAB と共通のヘッダー・フッターを備えています。画面の説明と操作は日本語です。
@@ -14,6 +16,7 @@
 - [画面の使い方](#画面の使い方)
 - [数理モデルと原式の関係](#数理モデルと原式の関係)
 - [動作確認](#動作確認)
+- [公開サイトと更新](#公開サイトと更新)
 - [ファイル構成](#ファイル構成)
 - [Cognitive Dynamics Series](#cognitive-dynamics-series)
 
@@ -71,6 +74,16 @@ node tests/surface3d-check.js
 
 ブラウザでは「最後の一手を考える」→「現在まで計算」で「現在から実行」へ自動で切り替わります。「方策を実行」を押して再生します。短い期限では目標に届かない場合があることも、残り距離から確認できます。
 
+## 公開サイトと更新
+
+公開サイト： [HJB LAB](https://inthecradle.github.io/hjb-lab/)
+
+リポジトリ： [inthecradle/hjb-lab](https://github.com/inthecradle/hjb-lab)
+
+GitHub Pagesで、`main` ブランチのルートにある `index.html`・JavaScript・CSSを配信しています。ビルドは不要で、`main` へのpushで公開サイトが自動更新されます。
+
+公開用リポジトリの「Settings → Pages → Source」は「Deploy from a branch」、Branchは `main` / `/(root)` に設定します。更新前の動作確認には、上記の `node tests/solver-check.js` と `node tests/surface3d-check.js` を使用します。
+
 ## ファイル構成
 
 | ファイル | 役割 |
@@ -90,12 +103,10 @@ node tests/surface3d-check.js
 | Lab | テーマ |
 | --- | --- |
 | [LYAPUNOV LAB](https://inthecradle.github.io/lyapunov-lab/) · THEOREM 01 | リアプノフ関数と状態の時間変化 |
-| HJB LAB · THEOREM 08 | 終端条件からの価値関数・方策の逆算と前向き実行 |
+| [HJB LAB](https://inthecradle.github.io/hjb-lab/) · THEOREM 08 | 終端条件からの価値関数・方策の逆算と前向き実行 |
 | [EVOLUTION LAB](https://inthecradle.github.io/evolution-lab/) · THEOREM 12 | 適応度、勾配流、低抽象近似 |
 | INVERSE LIMIT LAB · THEOREM 16（第4弾） | 逆極限と固定点 |
 
-スマートフォンでは地図の直後に再生操作と時刻バーを配置しています。ポート5175でのローカル起動時、フッターのシリーズリンクはLYAPUNOV LABの5173、EVOLUTION LABの5174、INVERSE LIMIT LABの5176へ向きます。それぞれの開発サーバーを起動して使用してください。その他の配信先ではLYAPUNOV LABとEVOLUTION LABの公開済みサイトへリンクします。
-
-INVERSE LIMIT LABは、`index.html` 内の `data-lab="inverse"` のカードにある `data-public-url` に公開URLを設定するとリンクが有効になり、未設定では「公開準備中」と表示します。`series-chrome.css` は4作品で同じ内容を保持します。React製の3作品では `SeriesChrome.tsx` も同期し、INVERSE LIMIT LABへの公開リンクはビルド時の `VITE_INVERSE_LIMIT_LAB_URL` で設定します。
+ポート5175でのローカル起動時、フッターからLYAPUNOV LABの5173、EVOLUTION LABの5174へリンクします。それぞれの開発サーバーを起動して使用してください。GitHub Pagesでは両Labの公開サイトへリンクします。
 
 制作：[CognitiveMind](https://note.com/dawn_of_coaching)
