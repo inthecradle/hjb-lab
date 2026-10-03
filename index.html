@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>HJB LAB | 未来から方策をつくる</title>
+<meta name="theme-color" content="#0b1017">
+<meta name="description" content="定理8の動的計画法を、終端条件からの逆算・候補操作の比較・前向き実行で探索する数理実験室。">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230b1017'/%3E%3Cpath d='M25 8H15L7 16l8 8h10M7 16h18' stroke='%2365e6d0' stroke-width='3' fill='none'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="style.css"><link rel="stylesheet" href="series-chrome.css"><script src="series.js" defer></script><script src="solver.js" defer></script><script src="surface3d.js" defer></script><script src="app.js" defer></script>
+</head>
+<body>
+<div id="lab">
+ <a class="skip-link" href="#experiment">実験へ進む</a>
+ <header class="series-header" id="top">
+  <p class="series-label">COGNITIVE DYNAMICS SERIES</p>
+  <div class="series-header-row">
+   <a href="#top" class="series-wordmark" aria-label="HJB LAB ホーム"><svg aria-hidden="true" viewBox="0 0 36 36"><path d="M30 8H18L7 18l11 10h12M7 18h23"/></svg><span>HJB <b>LAB</b></span></a>
+   <div class="series-header-actions"><span class="series-theorem">THEOREM 08</span><a href="#about" class="series-about-link">この実験について <span aria-hidden="true">↗</span></a></div>
+  </div>
+ </header>
+ <main>
+ <div class="intro"><h1>未来から、いまの一手をつくる。</h1><p>終端条件を置く。価値を逆算する。方策に沿って進む。</p></div>
+ <nav class="steps" aria-label="実験の段階"><button data-step="terminal" aria-current="step"><span>01</span><b>未来を設定</b><small>終端条件 W(x,T)</small></button><button data-step="backward"><span>02</span><b>一手ずつ逆算</b><small>価値 W と方策 π</small></button><button data-step="forward"><span>03</span><b>現在から実行</b><small>状態 x(t) の変化</small></button></nav>
+ <section class="workbench" id="experiment" aria-label="動的計画法の実験">
+  <div class="space-panel panel">
+   <div class="panel-top"><div><span class="eyebrow">STATE SPACE</span><h3 id="mapTitle">未来の評価を、地形にする</h3></div><div class="time-readout"><small>表示時刻</small><strong id="timeNow">t = 6.00</strong></div></div>
+   <div class="map-tools"><div class="segmented" role="group" aria-label="状態空間の表示"><button data-view="2d" aria-pressed="true">2D</button><button data-view="3d" aria-pressed="false">3D</button></div><div class="segmented" aria-label="背景の量"><button data-layer="value" aria-pressed="true">価値 W</button><button data-layer="cost" aria-pressed="false">負荷 V₀</button></div><label class="check"><input type="checkbox" id="field" checked> 方策の矢印</label><span class="legend-inline"><i class="goal-dot"></i> TCZ(G)<i class="start-dot"></i> x₀</span></div>
+   <div id="cameraTools" class="camera-tools hidden" role="group" aria-label="3Dの視点操作"><span>ドラッグで回転</span><button data-camera="left" aria-label="左へ回転">↶</button><button data-camera="right" aria-label="右へ回転">↷</button><button data-camera="up" aria-label="上から見る">↑</button><button data-camera="down" aria-label="低い角度から見る">↓</button><button data-camera="reset">視点リセット</button></div>
+   <div class="plot-wrap"><canvas id="map" role="img" tabindex="0" aria-label="状態空間。矢印キーで調べる地点を移動。図をクリックして候補操作を比較できます。"></canvas><div id="mapBadge" class="map-badge">終端 T：この先はない</div></div>
+   <div class="map-footer"><div class="color-key"><span>低い</span><i></i><span>高い</span><b id="colorLabel">W の相対色</b></div><span id="heightNote" class="hidden">高さ：W（対数圧縮・時刻間で共通尺度）</span><span id="mapHint">地点をクリックすると、その場所の終端コストを表示</span></div>
+   <div class="edit-tools"><span>図をクリックして</span><button data-edit="inspect" aria-pressed="true">地点を調べる</button><button data-edit="goal" aria-pressed="false">ゴール G を移す</button><button data-edit="start" aria-pressed="false">初期状態 x₀ を移す</button></div>
+  </div>
+ <section class="timeline-panel panel">
+  <div class="transport"><div class="transport-buttons"><button id="play" class="primary">▶ 逆算を再生</button><button id="single">← 1手戻す</button><button id="complete">現在まで計算</button><button id="reset" class="quiet" title="計算を終端条件からやり直す">↺ リセット</button></div><div class="transport-state"><span class="direction" id="directionLabel">計算の向き　T → 0</span><label for="speed">速度</label><select id="speed"><option value="1000">ゆっくり</option><option value="450" selected>標準</option><option value="140">速い</option></select></div></div>
+  <div class="timeline-labels"><span>現在 <b>t = 0</b></span><span id="timelineInstruction">右端の終端条件から、左へ一層ずつ計算</span><span>未来 <b id="endLabel">T = 6</b></span></div>
+  <div id="timeline" class="timeline" aria-label="時刻別の価値関数。計算済みの時刻を選べます。"></div>
+  <div class="timeline-caption"><span><i class="tiny-key known"></i>計算済み <i class="tiny-key unknown"></i>未計算 <i class="tiny-key selected"></i>表示中</span><span id="progressText" role="status">0 / 24 手を計算</span></div>
+ </section>
+  <aside class="inspector panel">
+   <div class="panel-top"><div><span class="eyebrow">ONE-STEP INSPECTOR</span><h3 id="inspectTitle">この地点を、未来から評価</h3></div><span class="pill" id="pointLabel">x = (1.72, 2.03)</span></div>
+   <div class="equation-box" id="equationBox">
+    <div id="terminalEquation" class="equation">W<sub>N</sub>(<button class="token" data-focus="x">x</button>) = <button class="token gold" data-focus="goal">λ d(x, D)²</button></div>
+    <div id="bellmanEquation" class="equation hidden"><button class="token" data-focus="value">W<sub>k</sub>(x)</button> = <span class="mint">min</span><sub>u</sub> { <button class="token gold" data-focus="cost">V₀(x,t<sub>k</sub>) Δt</button><br><span class="indent">+ <button class="token lavender" data-focus="future">W<sub>k+1</sub>(x + Δt <em>f</em>)</button> }</span></div>
+    <p id="equationHint">終端では、ゴールまでの距離だけを採点します。</p>
+   </div>
+   <div id="terminalDetail"><div class="terminal-number"><span>この地点の終端コスト</span><strong id="terminalValue">0.00</strong></div><div class="number-row"><span>目標までの距離 d(x,D)</span><b id="distanceValue"></b></div><div class="number-row"><span>終端の重み λ</span><b id="lambdaValue"></b></div><p class="note">ここでの D は目標集合。領域モードでは D = TCZ(G)、点モードでは D = {G} です。</p><button id="firstStep" class="primary wide">← 最後の一手を考える</button></div>
+   <div id="candidateDetail" class="hidden">
+    <div class="candidate-heading"><span>候補の合計コスト Q<sub>k</sub>(x,u)</span><button id="allCandidates" class="text-button">全17候補</button></div>
+    <div id="candidates" class="candidate-list"></div>
+    <div class="sum-strip"><div><span>今の負荷</span><b id="stageValue">—</b></div><span>＋</span><div><span>その先の最小値</span><b id="futureValue">—</b></div><span>＝</span><div><span id="qLabel">合計</span><b id="qValue">—</b></div></div>
+    <div class="dynamics"><div class="vector-wrap"><svg id="vector" viewBox="0 0 180 142" role="img" aria-label="環境 b と操作 u を足した実際の変化 f"></svg></div><div class="dynamics-copy"><div class="equation small-equation"><button class="token mint" data-focus="f">ẋ = f(x,u,t)</button></div><p><span class="gold">b(x,t)</span> ＋ <span class="lavender">u</span> ＝ <span class="mint">f</span></p><dl><dt>操作 u</dt><dd id="uValue">—</dd><dt>環境 b</dt><dd id="bValue">—</dd><dt>変化 f</dt><dd id="fValue">—</dd></dl></div></div>
+    <div class="next-state" id="nextState"></div>
+   </div>
+   <div class="inspector-note" id="inspectorNote">ゴール側の評価が、逆算の出発点になります。</div>
+  </aside>
+ </section>
+ <section class="below">
+  <div class="parameters panel"><div class="section-heading"><span class="eyebrow">MODEL CONTROLS</span><h3>条件を変えて、方策を比べる</h3></div><div class="parameter-grid">
+   <div class="control"><label for="target">終端の目標</label><select id="target"><option value="region">領域 TCZ(G)</option><option value="point">点 G（原式の形）</option></select></div>
+   <div class="control"><label for="horizon">期限 T <output id="horizonOut">6.0</output></label><input id="horizon" type="range" min="2" max="9" step="0.5" value="6"></div>
+   <div class="control"><label for="weight">終端の重み λ <output id="weightOut">12</output></label><input id="weight" type="range" min="0.5" max="30" step="0.5" value="12"></div>
+   <div class="control"><label for="drift">環境の流れ β <output id="driftOut">0.32</output></label><input id="drift" type="range" min="-0.6" max="0.6" step="0.02" value="0.32"></div>
+   <div class="control"><label for="barrier">中央の負荷 A <output id="barrierOut">2.6</output></label><input id="barrier" type="range" min="0" max="7" step="0.2" value="2.6"></div>
+   <div class="control"><label for="radius">TCZ(G) の半径 r <output id="radiusOut">0.65</output></label><input id="radius" type="range" min="0.25" max="1.25" step="0.05" value="0.65"></div>
+  </div><p class="note">条件を変えると、終端から計算し直します。座標は認知状態を表すための無次元の教材用座標です。</p></div>
+  <div class="explanation panel"><div class="section-heading"><span class="eyebrow" id="storyEyebrow">TERMINAL CONDITION</span><h3 id="storyTitle">未来の「評価基準」を先に置く</h3></div><p id="storyText">TCZ(G) の内側は終端コストが 0。外側は距離の2乗でコストが増えます。この評価を、ひとつ前の時刻の判断に使います。</p><div class="status-line" id="liveStatus"></div><div class="formula-link"><span>連続時間での関係</span><div class="equation">−∂W<sub>G</sub>/∂t = min<sub>u</sub> { V₀ + ∇W<sub>G</sub> · f }</div><p>一手 Δt を小さくした極限が HJB 方程式。画面は時間と空間を区切った動的計画法です。</p></div></div>
+ </section>
+ <section id="about" aria-label="この実験について・出典">
+ <details id="mathDetails" class="math-details panel"><summary>数式を読む・このシミュレーションの前提 <span>＋</span></summary><div class="details-content">
+  <div><h3>定理8との対応</h3><p>参照する原式は J<sub>G</sub>[u] = ∫ V₀(x(τ),τ)dτ + λd(x(T),G)²、および W<sub>G</sub>(x,T) = λd(x,G)² です。「点 G」モードはこの形を使います。「領域 TCZ(G)」モードは、距離の対象を教材用の円盤 D に置き換えた集合目標の拡張です。円盤を論文の TCZ の一般的な定義と同一視するものではありません。</p><p><a href="https://tomabechi.jp/TomabechiTimeTheoryMin6JA.html" target="_blank" rel="noopener noreferrer">苫米地未来原点認知時間理論 — §10・付録 A.5 ↗</a></p><h3>時間を戻すのは「計算」</h3><p>W<sub>k+1</sub> が分かれば、全地点の W<sub>k</sub> と π<sub>k</sub> を計算できます。一本の軌道を後ろ向きにたどるのではなく、「その時刻にその地点にいたら何をするか」という方策を作ります。実行時は ẋ = f(x,π(x,t),t) に従い、時刻 0 から T へ進みます。</p></div>
+  <div><h3>具体的な f(x,u,t)</h3><div class="math-block">f(x,u,t) = b(x,t) + u<br>b(x,t) = 0.32β[0.7 + 0.3 cos(2πt/T)] (−(x₂−3.75), x₁−5)</div><p>u は「操作なし」と16方向の速さ 1.6 の操作、合計17候補。b は状態・時刻によって変わる環境の流れです。操作なしでも、b ≠ 0 なら動きます。矢印 f は速度、次の位置までの変位は Δt f です。</p><h3>その場の負荷 V₀</h3><div class="math-block">V₀(x) = 0.06 + 0.016[(x₁−1.7)² + (x₂−2.1)²]<br>+ A exp(−(x₁−5.1)²/0.65 − (x₂−3.65)²/1.35)</div><p>中央に高負荷の領域があり、最短の方向が最小コストとは限りません。この V₀ と f は逆算を観察するために設定したモデルであり、人間の認知を測定した値ではありません。</p></div>
+  <div><h3>ベルマン更新から HJB へ</h3><div class="math-block">W(x,t) ≈ min<sub>u</sub> { V₀(x,t)Δt + W(x + Δt f,t + Δt) }<br>W(x + Δt f,t + Δt) ≈ W + Δt ∂ₜW + Δt ∇W · f<br>0 = ∂ₜW + min<sub>u</sub> { V₀ + ∇W · f }</div><p>滑らかな点での一次展開です。∇W · f は「その方向へ動くと、将来のコストがどれだけ変わるか」。候補の最小値が価値 W、最小値を与える操作が方策 π です。複数の最小候補がある場合は一つを選びます。</p></div>
+  <div><h3>数値計算の範囲</h3><p>状態空間は [0,10] × [0,7.5]、65 × 49 格子、Δt = 0.25。陽的 Euler の次状態と双線形補間による半ラグランジュ型のベルマン更新を使います。領域外へ出る候補は不許可です。有限の17候補で最小化する近似で、連続制御の HJB の厳密解ではありません。</p><p>実行時も、現在の連続座標で同じ17候補を評価します。格子補間のため、軌道の実測コストと補間した W に差が出ることがあります。有限の終端ペナルティは到達を強制せず、TCZ への収束や到達後の不変性も保証しません。画面には実際の残り距離を表示します。</p></div>
+ </div></details>
+ </section>
+ </main>
+ <footer class="series-footer">
+  <p class="series-label">COGNITIVE DYNAMICS SERIES</p>
+  <nav class="series-labs" aria-label="シリーズの実験">
+   <a class="series-lab" data-lab="lyapunov" href="https://inthecradle.github.io/lyapunov-lab/"><strong>LYAPUNOV LAB</strong><span>収束と安定性</span><small aria-hidden="true">↗</small></a>
+   <span class="series-lab" aria-current="page"><strong>HJB LAB</strong><span>未来からの最適制御</span><small>現在のLab</small></span>
+   <a class="series-lab" data-lab="evolution" href="https://inthecradle.github.io/evolution-lab/"><strong>EVOLUTION LAB</strong><span>適応度と進化</span><small aria-hidden="true">↗</small></a>
+   <span class="series-lab series-unavailable" data-lab="inverse" data-public-url=""><strong>INVERSE LIMIT LAB</strong><span>逆極限と固定点</span><small>公開準備中</small></span>
+  </nav>
+  <p class="series-description">苫米地定理の数理構造を、操作して学ぶ教育用シミュレーターです。<br>具体関数・可視化モデルの設定と、参照資料の定理を区別しています。</p>
+  <a href="#about" class="series-sources">この実験について・出典 <span aria-hidden="true">↑</span></a>
+  <div class="series-owner"><a href="https://note.com/dawn_of_coaching" target="_blank" rel="noopener noreferrer">コーチングの夜明け <span aria-hidden="true">↗</span></a><span aria-hidden="true">／</span><span>CognitiveMind Inc.</span></div>
+ </footer>
+</div>
+</body></html>
